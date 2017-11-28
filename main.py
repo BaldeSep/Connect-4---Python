@@ -82,38 +82,44 @@ class Connect_4():
 	
 	
 	def checkWinning(self, row, col):
-        board_height = len(self.board)
-        board_width = len(self.board[row])
+		board_height = len(self.board)
+		board_width = len(self.board[row])
         
 		
 		# check South
 		if (row+1) < board_height:
-				
+			if self.board[row+1][col] == self.turn:
+				print()	
 		
 		# check East
 		if (col+1) < board_width:
 			if self.board[row][col+1] == self.turn:
+				print()
 				
 		# check West
 		if (col-1) >= 0:
 			if self.board[row][col-1] == self.turn:
+				print()
 				
 		# check North East
 		if (col+1) < board_width and (row-1) >= 0:
 			if self.board[row-1][col+1] == self.turn:
+				print()
 				
 		# check North West
 		if (row-1) >= 0 and (col-1) >= 0:
 			if self.board[row-1][col-1] == self.turn:
-		
+				print()
+				
 		# check South East
 		if (row+1) < board_height and (col+1) < board_width:
 			if self.board[row+1][col+1] == self.turn:
-		
+				print()
+				
 		# check South West
 		if (row+1) < board_height and (col-1) >= 0:
 			if self.board[row+1][col-1] == self.turn:
-			
+				print()
 			
 			
 			 
