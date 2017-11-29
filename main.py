@@ -4,9 +4,8 @@ from tkinter import messagebox
 
 class Connect_4():
 	def __init__(self, master = None):
-		
-		self.board = [[0 for x in range(7)] for y in range(6)]
 		self.root = master
+		self.board = [[0 for x in range(7)] for y in range(6)]
 	
 		self.root.title('Connect 4')
 		
@@ -43,7 +42,8 @@ class Connect_4():
 				self.labels[r][c].config(image = self.empty)
 		
 		self.turn = 1
-	
+		
+		self.status.config(text = 'Player Turn: ' + str(self.turn))
 	def init_labels(self):
 		for c in range(7):
 			for r in range(6):
@@ -63,7 +63,10 @@ class Connect_4():
 			self.board[next_avail_row][col] = self.turn
 			self.update_image(next_avail_row, col)
 
-		self.checkWinning(next_avail_row, col)
+		if self.checkWinning(next_avail_row, col) == True:
+			messagebox.showinfo('Winner!!!', 'Player ' + str(self.turn) + ' Wins!!!')
+			self.reset()
+			return
         
 		if self.turn == 1:
 			self.turn = 2
@@ -82,50 +85,77 @@ class Connect_4():
 	
 	
 	def checkWinning(self, row, col):
-		board_height = len(self.board)
-		board_width = len(self.board[row])
-        
+		board_h = len(self.board)
+		board_w = len(self.board[row])
+		
+		# check East then West
+		counter = 1
+		next_left_col = col - 1
+		next_right_col = col + 1
+		while next_left_col >= 0 and self.board[row][next_left_col] == self.turn:
+			counter += 1
+			next_left_col -= 1
+			if counter == 4:
+				return True
+		
+		while next_right_col < board_w and self.board[row][next_right_col] == self.turn:
+			counter +=1 
+			next_right_col += 1
+			if counter == 4:
+				return True
+				
 		
 		# check South
-		if (row+1) < board_height:
-			if self.board[row+1][col] == self.turn:
-				print()	
+		counter = 1
+		next_row = row + 1
+		while next_row < board_h and self.board[next_row][col] == self.turn:
+			next_row += 1
+			counter += 1
+			if counter == 4:
+				return True
 		
-		# check East
-		if (col+1) < board_width:
-			if self.board[row][col+1] == self.turn:
-				print()
+		
+		# check North East then South West
+		counter = 1
+		next_north_row = row - 1
+		next_south_row = row + 1
+		next_right_col = col + 1
+		next_left_col = col - 1
+		while next_north_row >= 0 and next_right_col < board_w and self.board[next_north_row][next_right_col] == self.turn:
+			next_north_row -= 1
+			next_right_col += 1
+			counter += 1
+			if counter == 4:
+				return True
+		
+		while next_south_row < board_h and next_left_col >= 0 and self.board[next_south_row][next_left_col] == self.turn:
+			next_south_row += 1
+			next_left_col -= 1
+			counter += 1
+			if counter == 4:
+				return True
+		
+		
+		# check South East then North West
+		counter = 1
+		next_south_row = row + 1
+		next_right_col = col + 1
+		next_north_row = row - 1
+		next_left_col = col - 1
+		while next_south_row < board_h and next_right_col < board_w and self.board[next_south_row][next_right_col] == self.turn:
+			next_south_row += 1
+			next_right_col += 1
+			counter += 1
+			if counter == 4:
+				return True
+		
+		while next_north_row >= 0 and next_left_col >= 0 and self.board[next_north_row][next_left_col] == self.turn:
+			next_north_row -= 1
+			next_left_col -= 1
+			counter +=1 
+			if counter == 4:
+				return True
 				
-		# check West
-		if (col-1) >= 0:
-			if self.board[row][col-1] == self.turn:
-				print()
-				
-		# check North East
-		if (col+1) < board_width and (row-1) >= 0:
-			if self.board[row-1][col+1] == self.turn:
-				print()
-				
-		# check North West
-		if (row-1) >= 0 and (col-1) >= 0:
-			if self.board[row-1][col-1] == self.turn:
-				print()
-				
-		# check South East
-		if (row+1) < board_height and (col+1) < board_width:
-			if self.board[row+1][col+1] == self.turn:
-				print()
-				
-		# check South West
-		if (row+1) < board_height and (col-1) >= 0:
-			if self.board[row+1][col-1] == self.turn:
-				print()
-			
-			
-			 
-				
-        
-        
 	def update_image(self, row, col):
 		if self.turn == 1:
 			self.labels[row][col].config(image = self.player_1_image)
@@ -135,5 +165,6 @@ class Connect_4():
 root = Tk()
 
 Connect_4(root)
+
 
 root.mainloop()
